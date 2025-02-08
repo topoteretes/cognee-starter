@@ -1,6 +1,6 @@
 
 # Cognee Starter Kit
-Welcome to the cognee Starter Repo! This repository is designed to help you get started quickly by providing a structured dataset and pre-built data pipelines using cognee to build powerful knowledge graphs.
+Welcome to the <a href="https://github.com/topoteretes/cognee">cognee</a> Starter Repo! This repository is designed to help you get started quickly by providing a structured dataset and pre-built data pipelines using cognee to build powerful knowledge graphs.
 
 You can use this repo to ingest, process, and visualize data in minutes. 
 
@@ -41,7 +41,7 @@ source .venv/bin/activate
 
 ## Run the Default Pipeline
 
-This script will ingest text data, build a knowledge graph, and allow you to run search queries.
+This script runs the cognify pipeline with default settings. It ingests text data, builds a knowledge graph, and allows you to run search queries.
 
 ```
 python src/pipelines/default.py
@@ -49,7 +49,7 @@ python src/pipelines/default.py
 
 ## Run the Low-Level Pipeline
 
-This script processes the given JSON data about companies and employees, making it searchable via a graph.
+This script implements its own pipeline with custom ingestion task. It processes the given JSON data about companies and employees, making it searchable via a graph.
 
 ```
 python src/pipelines/low_level.py
@@ -57,13 +57,13 @@ python src/pipelines/low_level.py
 
 ## Run the Custom Model Pipeline
 
-This script categorizes programming languages as an example and visualizes relationships.
+Custom model uses custom pydantic model for graph extraction. This script categorizes programming languages as an example and visualizes relationships.
 
 ```
 python src/pipelines/custom-model.py
 ```
 
-## Graph preview with Graphistry (Optional)
+## Graph preview with Graphistry
 In order to use Graphistry for graph visualization:
 - create an account and API key from https://www.graphistry.com
 - add the following environment variables to `.env` file:

@@ -67,22 +67,22 @@ async def main():
     await visualize_graph(graph_file_path)
 
     # Completion query that uses graph data to form context.
-    completion = await search("What is python?", SearchType.GRAPH_COMPLETION)
+    graph_completion = await search(query_text="What is python?", query_type=SearchType.GRAPH_COMPLETION)
     print("Graph completion result is:")
-    print(completion)
+    print(graph_completion)
 
     # Completion query that uses document chunks to form context.
-    completion = await search("What is Python?", SearchType.COMPLETION)
+    completion = await search(query_text="What is Python?", query_type=SearchType.COMPLETION)
     print("Completion result is:")
     print(completion)
 
     # Query all summaries related to query.
-    summaries = await search("Python", SearchType.SUMMARIES)
+    summaries = await search(query_text="Python", query_type=SearchType.SUMMARIES)
     print("Summary results are:")
     for summary in summaries:
         print(summary)
 
-    chunks = await search("Python", SearchType.CHUNKS)
+    chunks = await search(query_text="Python", query_type=SearchType.CHUNKS)
     print("Chunk results are:")
     for chunk in chunks:
         print(chunk)
