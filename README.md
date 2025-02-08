@@ -1,6 +1,17 @@
 
-# Cognee starter repo
+# Cognee Starter Kit
+Welcome to the <a href="https://github.com/topoteretes/cognee">cognee</a> Starter Repo! This repository is designed to help you get started quickly by providing a structured dataset and pre-built data pipelines using cognee to build powerful knowledge graphs.
 
+You can use this repo to ingest, process, and visualize data in minutes. 
+
+By following this guide, you will:
+
+- Load structured company and employee data
+- Utilize pre-built pipelines for data processing
+- Perform graph-based search and query operations
+- Visualize entity relationships effortlessly on a graph
+
+# How to Use This Repo 🛠
 ## Install dependencies
 ```
 uv sync
@@ -23,22 +34,49 @@ EMBEDDING_API_KEY=""
 EMBEDDING_API_VERSION=""
 ```
 
-## Run
 Activate the Python environment:
 ```
 source .venv/bin/activate
 ```
 
-Run the code:
+## Run the Default Pipeline
+
+This script runs the cognify pipeline with default settings. It ingests text data, builds a knowledge graph, and allows you to run search queries.
+
 ```
 python src/pipelines/default.py
 ```
 
-### Graph preview with Graphistry
-In order to use Graphistry, create an account and API key.
-Add environment variables to `.env` file:
+## Run the Low-Level Pipeline
+
+This script implements its own pipeline with custom ingestion task. It processes the given JSON data about companies and employees, making it searchable via a graph.
+
+```
+python src/pipelines/low_level.py
+```
+
+## Run the Custom Model Pipeline
+
+Custom model uses custom pydantic model for graph extraction. This script categorizes programming languages as an example and visualizes relationships.
+
+```
+python src/pipelines/custom-model.py
+```
+
+## Graph preview with Graphistry
+In order to use Graphistry for graph visualization:
+- create an account and API key from https://www.graphistry.com
+- add the following environment variables to `.env` file:
 ```
 GRAPHISTRY_USERNAME=""
 GRAPHISTRY_PASSWORD=""
 ```
 Note: `GRAPHISTRY_PASSWORD` is API key.
+
+
+# What will you build with cognee?
+
+- Expand the dataset by adding more structured/unstructured data
+- Customize the data model to fit your use case
+- Use the search API to build an intelligent assistant
+- Visualize knowledge graphs for better insights
