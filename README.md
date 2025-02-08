@@ -64,7 +64,18 @@ python src/pipelines/custom-model.py
 ```
 
 ## Graph preview with Graphistry
-In order to use Graphistry for graph visualization:
+
+cognee provides a visualize_graph function that will render the graph for you.
+
+```
+    graph_file_path = str(
+        pathlib.Path(
+            os.path.join(pathlib.Path(__file__).parent, ".artifacts/graph_visualization.html")
+        ).resolve()
+    )
+    await visualize_graph(graph_file_path)
+```
+If you want to use tools like Graphistry for graph visualization:
 - create an account and API key from https://www.graphistry.com
 - add the following environment variables to `.env` file:
 ```
