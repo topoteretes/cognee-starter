@@ -63,7 +63,7 @@ Custom model uses custom pydantic model for graph extraction. This script catego
 python src/pipelines/custom-model.py
 ```
 
-## Graph preview with Graphistry
+## Graph preview 
 
 cognee provides a visualize_graph function that will render the graph for you.
 
