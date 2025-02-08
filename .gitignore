@@ -3,3 +3,7 @@
 .venv/
 
 .python-version
+
+.artifacts/
+.data_storage/
+.cognee_system/

@@ -3,7 +3,7 @@ import asyncio
 import pathlib
 from cognee import config, add, cognify, search, SearchType, prune, visualize_graph
 # from cognee.shared.utils import render_graph
-from cognee.infrastructure.engine import DataPoint
+from cognee.low_level import DataPoint
 
 async def main():
     data_directory_path = str(
@@ -39,6 +39,7 @@ async def main():
     class Field(DataPoint):
         name: str
         is_type: FieldType
+        metadata: dict = {"index_fields": ["name"]}
 
     class ProgrammingLanguageType(DataPoint):
         name: str = "Programming Language"
@@ -47,6 +48,7 @@ async def main():
         name: str
         used_in: list[Field] = []
         is_type: ProgrammingLanguageType
+        metadata: dict = {"index_fields": ["name"]}
 
 
     # Cognify the text data.
@@ -65,22 +67,22 @@ async def main():
     await visualize_graph(graph_file_path)
 
     # Completion query that uses graph data to form context.
-    completion = await search(SearchType.GRAPH_COMPLETION, "What is python?")
+    completion = await search("What is python?", SearchType.GRAPH_COMPLETION)
     print("Graph completion result is:")
     print(completion)
 
     # Completion query that uses document chunks to form context.
-    completion = await search(SearchType.COMPLETION, "What is Python?")
+    completion = await search("What is Python?", SearchType.COMPLETION)
     print("Completion result is:")
     print(completion)
 
     # Query all summaries related to query.
-    summaries = await search(SearchType.SUMMARIES, "Python")
+    summaries = await search("Python", SearchType.SUMMARIES)
     print("Summary results are:")
     for summary in summaries:
         print(summary)
 
-    chunks = await search(SearchType.CHUNKS, query_text="Python")
+    chunks = await search("Python", SearchType.CHUNKS)
     print("Chunk results are:")
     for chunk in chunks:
         print(chunk)

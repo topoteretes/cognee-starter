@@ -7,7 +7,7 @@ from cognee import visualize_graph
 from cognee.low_level import setup, DataPoint
 from cognee.pipelines import run_tasks, Task
 from cognee.tasks.storage import add_data_points
-from cognee.tasks.storage import index_graph_edges
+from cognee.tasks.storage.index_graph_edges import index_graph_edges
 # from cognee.shared.utils import render_graph
 
 
@@ -34,10 +34,10 @@ class Company(DataPoint):
 
 
 def ingest_files():
-    companies_file_path = os.path.join(os.path.dirname(__file__), "./companies.json")
+    companies_file_path = os.path.join(os.path.dirname(__file__), "../data/companies.json")
     companies = json.loads(open(companies_file_path, "r").read())
 
-    people_file_path = os.path.join(os.path.dirname(__file__), "./people.json")
+    people_file_path = os.path.join(os.path.dirname(__file__), "../data/people.json")
     people = json.loads(open(people_file_path, "r").read())
 
     people_data_points = {}
@@ -90,12 +90,13 @@ async def main():
         [
             Task(ingest_files),
             Task(add_data_points),
-            Task(index_graph_edges),
         ]
     )
 
     async for status in pipeline:
         print(status)
+
+    await index_graph_edges()
 
     # # Get a graphistry url (Register for a free account at https://www.graphistry.com)
     # url = await render_graph()
@@ -109,8 +110,8 @@ async def main():
 
     # Completion query that uses graph data to form context.
     completion = await search(
-        query_type=SearchType.GRAPH_COMPLETION,
         query_text="Who works for GreenFuture Solutions?",
+        query_type=SearchType.GRAPH_COMPLETION,
     )
     print("Graph completion result is:")
     print(completion)
