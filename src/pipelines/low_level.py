@@ -7,30 +7,37 @@ from cognee import visualize_graph
 from cognee.low_level import setup, DataPoint
 from cognee.pipelines import run_tasks, Task
 from cognee.tasks.storage import add_data_points
-from cognee.shared.utils import render_graph
+from cognee.tasks.storage import index_graph_edges
+# from cognee.shared.utils import render_graph
 
 
 class Person(DataPoint):
     name: str
+    metadata: dict = {"index_fields": ["name"]}
+
 
 class Department(DataPoint):
     name: str
     employees: list[Person]
+    metadata: dict = {"index_fields": ["name"]}
+
 
 class CompanyType(DataPoint):
     name: str = "Company"
+
 
 class Company(DataPoint):
     name: str
     departments: list[Department]
     is_type: CompanyType
+    metadata: dict = {"index_fields": ["name"]}
 
 
 def ingest_files():
-    companies_file_path = os.path.join(os.path.dirname(__file__), "../data/companies.json")
+    companies_file_path = os.path.join(os.path.dirname(__file__), "./companies.json")
     companies = json.loads(open(companies_file_path, "r").read())
 
-    people_file_path = os.path.join(os.path.dirname(__file__), "../data/people.json")
+    people_file_path = os.path.join(os.path.dirname(__file__), "./people.json")
     people = json.loads(open(people_file_path, "r").read())
 
     people_data_points = {}
@@ -68,29 +75,24 @@ def ingest_files():
 
 
 async def main():
-    data_directory_path = str(
-        pathlib.Path(
-            os.path.join(pathlib.Path(__file__).parent, ".data_storage")
-        ).resolve()
-    )
-    # Set up the data directory. Cognee will store files here.
-    config.data_root_directory(data_directory_path)
-
     cognee_directory_path = str(
-        pathlib.Path(
-            os.path.join(pathlib.Path(__file__).parent, ".cognee_system")
-        ).resolve()
+        pathlib.Path(os.path.join(pathlib.Path(__file__).parent, ".cognee_system")).resolve()
     )
     # Set up the Cognee system directory. Cognee will store system files and databases here.
     config.system_root_directory(cognee_directory_path)
 
-    # Prune data and system metadata before running, only if we want "fresh" state.
-    await prune.prune_data()
+    # Prune system metadata before running, only if we want "fresh" state.
     await prune.prune_system(metadata=True)
 
     await setup()
 
-    pipeline = run_tasks([Task(ingest_files), Task(add_data_points)])
+    pipeline = run_tasks(
+        [
+            Task(ingest_files),
+            Task(add_data_points),
+            Task(index_graph_edges),
+        ]
+    )
 
     async for status in pipeline:
         print(status)
@@ -106,7 +108,10 @@ async def main():
     await visualize_graph(graph_file_path)
 
     # Completion query that uses graph data to form context.
-    completion = await search(SearchType.GRAPH_COMPLETION, "Who works for GreenFuture Solutions?")
+    completion = await search(
+        query_type=SearchType.GRAPH_COMPLETION,
+        query_text="Who works for GreenFuture Solutions?",
+    )
     print("Graph completion result is:")
     print(completion)
 
