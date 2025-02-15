@@ -99,7 +99,7 @@ async def main():
             Task(add_data_points),
         ],
         test_uuid,
-        data_documents,
+        None,
         "demo_pipeline"
     )
 
