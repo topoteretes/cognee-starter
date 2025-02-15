@@ -9,7 +9,9 @@ from cognee.pipelines import run_tasks, Task
 from cognee.tasks.storage import add_data_points
 from cognee.tasks.storage.index_graph_edges import index_graph_edges
 # from cognee.shared.utils import render_graph
-
+from cognee.modules.data.models import Data, Dataset
+from cognee.modules.data.methods.get_dataset_data import get_dataset_data
+import uuid
 
 class Person(DataPoint):
     name: str
@@ -86,11 +88,19 @@ async def main():
 
     await setup()
 
+
+    # Generate a random UUID
+    test_uuid = uuid.uuid4()
+    data_documents: list[Data] = await get_dataset_data(dataset_id=test_uuid)
+
     pipeline = run_tasks(
         [
             Task(ingest_files),
             Task(add_data_points),
-        ]
+        ],
+        test_uuid,
+        None,
+        "demo_pipeline"
     )
 
     async for status in pipeline:
