@@ -89,16 +89,15 @@ async def main():
     await setup()
 
 
-    # Generate a random UUID
-    test_uuid = uuid.uuid4()
-    data_documents: list[Data] = await get_dataset_data(dataset_id=test_uuid)
+    # Generate a random dataset_id
+    dataset_id = uuid.uuid4()
 
     pipeline = run_tasks(
         [
             Task(ingest_files),
             Task(add_data_points),
         ],
-        test_uuid,
+        dataset_id,
         None,
         "demo_pipeline"
     )
