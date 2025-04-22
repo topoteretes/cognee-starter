@@ -8,7 +8,7 @@ from cognee.low_level import setup, DataPoint
 from cognee.pipelines import run_tasks, Task
 from cognee.tasks.storage import add_data_points
 from cognee.tasks.storage.index_graph_edges import index_graph_edges
-# from cognee.shared.utils import render_graph
+from cognee.modules.users.methods import get_default_user
 
 class Person(DataPoint):
     name: str
@@ -88,6 +88,7 @@ async def main():
 
     # Generate a random dataset_id
     dataset_id = uuid.uuid4()
+    user = await get_default_user()
 
     pipeline = run_tasks(
         [
@@ -96,6 +97,7 @@ async def main():
         ],
         dataset_id,
         None,
+        user,
         "demo_pipeline"
     )
 
@@ -103,10 +105,6 @@ async def main():
         print(status)
 
     await index_graph_edges()
-
-    # # Get a graphistry url (Register for a free account at https://www.graphistry.com)
-    # url = await render_graph()
-    # print(f"Graphistry URL: {url}")
 
     # Or use our simple graph preview
     graph_file_path = str(

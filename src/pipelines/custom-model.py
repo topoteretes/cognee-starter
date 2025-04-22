@@ -72,9 +72,9 @@ async def main():
     print(graph_completion)
 
     # Completion query that uses document chunks to form context.
-    completion = await search(query_text="What is Python?", query_type=SearchType.COMPLETION)
+    rag_completion = await search(query_text="What is Python?", query_type=SearchType.RAG_COMPLETION)
     print("Completion result is:")
-    print(completion)
+    print(rag_completion)
 
     # Query all summaries related to query.
     summaries = await search(query_text="Python", query_type=SearchType.SUMMARIES)
