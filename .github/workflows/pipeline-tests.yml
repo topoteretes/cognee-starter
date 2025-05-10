@@ -1,0 +1,61 @@
+name: Cognee Pipeline Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-pipelines:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install uv
+      run: pip install uv
+      
+    - name: Install dependencies
+      run: uv sync
+    
+    - name: Run default pipeline
+      env:
+          ENV: 'dev'
+          LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        source .venv/bin/activate
+        python src/pipelines/default.py
+      timeout-minutes: 5
+      
+    - name: Run low-level pipeline
+      env:
+        ENV: 'dev'
+        LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        source .venv/bin/activate
+        python src/pipelines/low_level.py
+      timeout-minutes: 5
+      
+    - name: Run custom model pipeline
+      env:
+        ENV: 'dev'
+        LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        source .venv/bin/activate
+        python src/pipelines/custom-model.py
+      timeout-minutes: 5
+      
+    - name: Run pipeline tests
+      env:
+        LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        source .venv/bin/activate
+        python -m unittest src/tests/test_pipelines.py
+      timeout-minutes: 15 
