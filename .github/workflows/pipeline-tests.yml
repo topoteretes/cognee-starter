@@ -1,0 +1,59 @@
+name: Cognee Pipeline Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-pipelines:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install uv
+      run: pip install uv
+      
+    - name: Install dependencies
+      run: uv sync
+      
+    - name: Set up environment variables
+      run: |
+        echo "LLM_PROVIDER=${{ secrets.LLM_PROVIDER || 'openai' }}" >> $GITHUB_ENV
+        echo "LLM_MODEL=${{ secrets.LLM_MODEL || 'gpt-3.5-turbo' }}" >> $GITHUB_ENV
+        echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" >> $GITHUB_ENV
+        echo "EMBEDDING_PROVIDER=${{ secrets.EMBEDDING_PROVIDER || 'openai' }}" >> $GITHUB_ENV
+        echo "EMBEDDING_MODEL=${{ secrets.EMBEDDING_MODEL || 'text-embedding-ada-002' }}" >> $GITHUB_ENV
+        echo "EMBEDDING_API_KEY=${{ secrets.EMBEDDING_API_KEY }}" >> $GITHUB_ENV
+    
+    - name: Run default pipeline
+      run: |
+        source .venv/bin/activate
+        python src/pipelines/default.py
+      timeout-minutes: 5
+      
+    - name: Run low-level pipeline
+      run: |
+        source .venv/bin/activate
+        python src/pipelines/low_level.py
+      timeout-minutes: 5
+      
+    - name: Run custom model pipeline
+      run: |
+        source .venv/bin/activate
+        python src/pipelines/custom-model.py
+      timeout-minutes: 5
+      
+    - name: Run pipeline tests
+      run: |
+        source .venv/bin/activate
+        python -m unittest src/tests/test_pipelines.py
+      timeout-minutes: 15 
