@@ -34,24 +34,35 @@ jobs:
         echo "EMBEDDING_API_KEY=${{ secrets.EMBEDDING_API_KEY }}" >> $GITHUB_ENV
     
     - name: Run default pipeline
+      env:
+          ENV: 'dev'
+          LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         source .venv/bin/activate
         python src/pipelines/default.py
       timeout-minutes: 5
       
     - name: Run low-level pipeline
+      env:
+        ENV: 'dev'
+        LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         source .venv/bin/activate
         python src/pipelines/low_level.py
       timeout-minutes: 5
       
     - name: Run custom model pipeline
+      env:
+        ENV: 'dev'
+        LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         source .venv/bin/activate
         python src/pipelines/custom-model.py
       timeout-minutes: 5
       
     - name: Run pipeline tests
+      env:
+        LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         source .venv/bin/activate
         python -m unittest src/tests/test_pipelines.py
