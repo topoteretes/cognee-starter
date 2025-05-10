@@ -12,6 +12,11 @@ By following this guide, you will:
 - Visualize entity relationships effortlessly on a graph
 
 # How to Use This Repo 🛠
+
+## Install uv if you don't have it on your system
+```
+pip install uv
+```
 ## Install dependencies
 ```
 uv sync
