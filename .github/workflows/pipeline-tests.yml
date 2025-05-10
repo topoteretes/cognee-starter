@@ -24,14 +24,6 @@ jobs:
       
     - name: Install dependencies
       run: uv sync
-      
-    - name: Set up environment variables
-      run: |
-        echo "LLM_PROVIDER=${{ secrets.LLM_PROVIDER || 'openai' }}" >> $GITHUB_ENV
-        echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" >> $GITHUB_ENV
-        echo "EMBEDDING_PROVIDER=${{ secrets.EMBEDDING_PROVIDER || 'openai' }}" >> $GITHUB_ENV
-        echo "EMBEDDING_MODEL=${{ secrets.EMBEDDING_MODEL || 'text-embedding-ada-002' }}" >> $GITHUB_ENV
-        echo "EMBEDDING_API_KEY=${{ secrets.EMBEDDING_API_KEY }}" >> $GITHUB_ENV
     
     - name: Run default pipeline
       env:
